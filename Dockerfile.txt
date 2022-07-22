@@ -1,35 +1,21 @@
 pipeline {
     agent any
  stages {
-  stage('Docker Build and Tag') {
+  stage('Docker image creation') {
            steps {
-              
-                sh 'docker build -t nginxtest:latest .' 
-                  sh 'docker tag nginxtest prasanna2121/nginxtest:latest'
-                sh 'docker tag nginxtest prasanna2121/nginxtest:$BUILD_NUMBER'
-               
-          }
-        }
-     
-  stage('Publish image to Docker Hub') {
-          
-            steps {
-        withDockerRegistry([ credentialsId: "dockerHub", url: "https://hub.docker.com" ]) {
-          sh  'docker push prasanna2121/nginxtest:latest'
-          sh  'docker push prasanna2121/nginxtest:$BUILD_NUMBER' 
-        }
+
+              sh ' docker pull ubuntu/bind9 '
                   
           }
         }
-     
-      stage('Run Docker container on Jenkins Agent') {
-             
-            steps {
-                sh "docker run -d -p 4030:80 prasanna2121/nginxtest"
- 
-            
- 
-            }
+stage('Docker container run ') {
+           steps {
+
+              sh 'docker run -it --name prak ubuntu/bind9 /bin/bash '
+                  
+          }
         }
-    }
-}
+                  
+     }
+  }
+
